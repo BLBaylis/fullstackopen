@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const logger = require('./utils/logger')
 const config = require('./utils/config')
 const blogsRouter = require('./controllers/blogs')
+const middlewares = require('./utils/middlewares')
 
 logger.info('connecting to MongoDB server')
 mongoose.connect(config.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -22,5 +23,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use('/api/blogs', blogsRouter)
+
+app.use(middlewares.errorHandler)
 
 module.exports = app;
