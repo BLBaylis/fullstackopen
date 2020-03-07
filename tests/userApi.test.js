@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const bcrypt = require('bcryptjs')
 const app = require('../app')
 const api = supertest(app)
 const User = require('../models/user')
@@ -8,9 +7,9 @@ const initialUsers = require('./testHelper').initialUsers
 const getAllDbUsers = require('./testHelper').getAllDbUsers
 
 beforeEach(async () => {
-    await User.deleteMany({})
-    const userObjs = initialUsers.hashed.map(user => new User(user))
-    await Promise.all(userObjs.map(userObj => userObj.save()))
+  await User.deleteMany({})
+  const userObjs = initialUsers.hashed.map(user => new User(user))
+  await Promise.all(userObjs.map(userObj => userObj.save()))
 })
   
 describe('/get', () => {
@@ -38,9 +37,9 @@ describe('/post', () => {
 
   test('can post valid user', async () => {
     const newUser = {
-      username: "New User",
-      name: "Testy Test",
-      password: "password"
+      username: 'New User',
+      name: 'Testy Test',
+      password: 'password'
     }
     
     await api

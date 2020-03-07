@@ -7,7 +7,7 @@ const initialBlogs = require('./testHelper').initialBlogs
 const getAllDbBlogs = require('./testHelper').getAllDbBlogs
 
 beforeEach(async () => {
-  await Blog.deleteMany({});
+  await Blog.deleteMany({})
 
   const blogObjs = initialBlogs.map(blog => new Blog(blog))
   await Promise.all(blogObjs.map(blogObj => blogObj.save())) 
@@ -37,31 +37,31 @@ describe('/get', () => {
 describe('/post', () => {
 
   test('can post valid blog', async () => {
-      const newBlog = {
-        title: "New Blog Post",
-        author: "Test Author",
-        url: "https://url.com",
-        likes: 2,
-      }
+    const newBlog = {
+      title: 'New Blog Post',
+      author: 'Test Author',
+      url: 'https://url.com',
+      likes: 2,
+    }
 
-      await api
+    await api
       .post('/api/blogs')
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-      const allBlogs = await getAllDbBlogs()
-      expect(allBlogs.length).toBe(initialBlogs.length + 1)
+    const allBlogs = await getAllDbBlogs()
+    expect(allBlogs.length).toBe(initialBlogs.length + 1)
 
-      const blogTitles = allBlogs.map(blog => blog.title)
-      expect(blogTitles).toContain('New Blog Post')
+    const blogTitles = allBlogs.map(blog => blog.title)
+    expect(blogTitles).toContain('New Blog Post')
   })
 
   test('likes defaults to 0 if missing from request', async () => {
     const newBlog = {
-      title: "New Blog Post",
-      author: "Test Author",
-      url: "https://url.com"
+      title: 'New Blog Post',
+      author: 'Test Author',
+      url: 'https://url.com'
     }
 
     const response = await api.post('/api/blogs').send(newBlog)
@@ -70,27 +70,27 @@ describe('/post', () => {
 
   test('reject requests with missing title', async () => {
     const blogWithNoTitle = {
-      author: "Test Author",
-      url: "https://url.com"
+      author: 'Test Author',
+      url: 'https://url.com'
     }
 
     await api
-        .post('/api/blogs')
-        .send(blogWithNoTitle)
-        .expect(400)
+      .post('/api/blogs')
+      .send(blogWithNoTitle)
+      .expect(400)
   })
 
   test('reject requests with missing url', async () => {
     const blogWithNoUrl = {
-      title: "New Blog Post",
-      author: "Test Author"
+      title: 'New Blog Post',
+      author: 'Test Author'
     }
 
     await api
-        .post('/api/blogs')
-        .send(blogWithNoUrl)
-        .expect(400)
-    })
+      .post('/api/blogs')
+      .send(blogWithNoUrl)
+      .expect(400)
+  })
 
 })
 
@@ -128,12 +128,12 @@ describe('/put/:id', () => {
 
   test('adds a blog if existing blog not found', async () => {
     const newBlog = {
-      title: "New Blog Post",
-      author: "Test Author",
-      url: "https://url.com",
+      title: 'New Blog Post',
+      author: 'Test Author',
+      url: 'https://url.com',
       likes: 2,
     }
-    const res = await api
+    await api
       .put('/api/blogs/5e6151482320eb12b8b36e41')
       .send(newBlog)
       .expect(201)
@@ -142,7 +142,7 @@ describe('/put/:id', () => {
     expect(allBlogs.length).toBe(initialBlogs.length + 1)
 
     const blogTitles = allBlogs.map(blog => blog.title)
-    expect(blogTitles).toContain("New Blog Post")
+    expect(blogTitles).toContain('New Blog Post')
   })
 
 })
