@@ -7,11 +7,12 @@ const mongoose = require('mongoose')
 const logger = require('./utils/logger')
 const config = require('./utils/config')
 const blogsRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
 const middlewares = require('./utils/middlewares')
 
 logger.info('connecting to MongoDB server')
-mongoose.connect(config.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => logger.info('Connected to MongoDB server'))
+mongoose.connect(config.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+  .then(() => logger.info('connected to MongoDB server'))
   .catch(error => {
     logger.info('error connection to MongoDB:', error.message)
 })
@@ -23,6 +24,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 
 app.use(middlewares.errorHandler)
 
