@@ -14,6 +14,11 @@ userRouter.get('/', async (req, res, next) => {
 userRouter.post('/', async (req, res, next) => {
 
   try {
+
+    if (!req.body.password) {
+      return res.status(400).end()
+    }
+
     const passwordHash = await bcrypt.hash(req.body.password, 10)
 
     const user = new User({

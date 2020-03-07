@@ -34,14 +34,14 @@ describe('/get', () => {
 })
   
 describe('/post', () => {
-
+ 
   test('can post valid user', async () => {
     const newUser = {
       username: 'New User',
       name: 'Testy Test',
       password: 'password'
     }
-    
+
     await api
       .post('/api/users')
       .send(newUser)
@@ -53,6 +53,42 @@ describe('/post', () => {
     
     const userTitles = allUsers.map(user => user.username)
     expect(userTitles).toContain('New User')
+  })
+
+  test('reject requests with missing username', async () => {
+    const noUserName = {
+      name: 'Testy Test',
+      password: 'password'
+    }
+
+    await api
+      .post('/api/users')
+      .send(noUserName)
+      .expect(400)
+  })
+
+  test('reject requests with missing name', async () => {
+    const noName = {
+      username: 'New User',
+      password: 'password'
+    }
+
+    await api
+      .post('/api/users')
+      .send(noName)
+      .expect(400)
+  })
+
+  test('reject requests with missing password', async () => {
+    const noPassword = {
+      username: 'New User',
+      name: 'Testy Test'
+    }
+
+    await api
+      .post('/api/users')
+      .send(noPassword)
+      .expect(400)
   })
 
 })
