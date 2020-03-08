@@ -15,7 +15,7 @@ mongoose.connect(config.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: 
   .then(() => logger.info('connected to MongoDB server'))
   .catch(error => {
     logger.info('error connection to MongoDB:', error.message)
-})
+  })
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -28,4 +28,4 @@ app.use('/api/users', usersRouter)
 
 app.use(middlewares.errorHandler)
 
-module.exports = app;
+module.exports = app

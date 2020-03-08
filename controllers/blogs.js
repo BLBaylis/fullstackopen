@@ -1,9 +1,10 @@
-const blogsRouter = require('express').Router();
+const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const CustomValidationError = require('../utils/customError')
 
 blogsRouter.get('/', async (req, res, next) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({})
     res.json(blogs)
   } catch (err) {
     next(err)
@@ -16,8 +17,13 @@ blogsRouter.post('/', async (req, res, next) => {
   try {
     const newBlog = await blog.save()
     res.status(201).json(newBlog.toJSON())
-  } catch (err) {
-    next(err)
+  } catch (thrownError) {
+    if (thrownError.name === 'ValidationError') {
+      const err = new CustomValidationError('Validation failed')
+      err.errors = thrownError.errors
+      next(err)
+    }
+    next(thrownError)
   }
 })
 
@@ -39,7 +45,7 @@ blogsRouter.put('/:id', async (req, res, next) => {
     const id = req.params.id
     let blogToUpdate = await Blog.findById(id)
     if (blogToUpdate) {
-      for (prop in req.body) {
+      for (const prop in req.body) {
         blogToUpdate[prop] = req.body[prop]
       }
       await blogToUpdate.save()

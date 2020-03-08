@@ -61,10 +61,14 @@ describe('/post', () => {
       password: 'password'
     }
 
-    await api
+    const response = await api
       .post('/api/users')
       .send(noUserName)
-      .expect(400)
+
+    expect(response.statusCode).toBe(400)
+    
+    const errorMessages = JSON.parse(response.res.text).errors
+    expect(errorMessages).toContain('username missing')
   })
 
   test('reject requests with missing name', async () => {
@@ -73,10 +77,14 @@ describe('/post', () => {
       password: 'password'
     }
 
-    await api
+    const response = await api
       .post('/api/users')
       .send(noName)
-      .expect(400)
+
+    expect(response.statusCode).toBe(400)
+    
+    const errorMessages = JSON.parse(response.res.text).errors
+    expect(errorMessages).toContain('name missing')
   })
 
   test('reject requests with missing password', async () => {
@@ -85,10 +93,66 @@ describe('/post', () => {
       name: 'Testy Test'
     }
 
-    await api
+    const response = await api
       .post('/api/users')
       .send(noPassword)
-      .expect(400)
+
+    expect(response.statusCode).toBe(400)
+    
+    const errorMessages = JSON.parse(response.res.text).errors
+    expect(errorMessages).toContain('password required')
+  
+  })
+
+  test('reject requests with non-unique username', async () => {
+    const nonUniqueUsername = {
+      username: 'Root',
+      name: 'Testy Test',
+      password: 'password'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(nonUniqueUsername)
+
+    expect(response.statusCode).toBe(400)
+    
+    const errorMessage = JSON.parse(response.res.text).errors
+    expect(errorMessage).toContain('username already taken')
+  })
+
+  test('reject requests with username length < 3', async () => {
+    const shortUsername = {
+      username: 'Ne',
+      name: 'Testy Test',
+      password: 'password'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(shortUsername)
+
+    expect(response.statusCode).toBe(400)
+    
+    const errorMessage = JSON.parse(response.res.text).errors
+    expect(errorMessage).toContain('username must be longer than 3 characters')
+  })
+
+  test('reject requests with password length < 3', async () => {
+    const shortPassword = {
+      username: 'New User',
+      name: 'Testy Test',
+      password:'Te'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(shortPassword)
+
+    expect(response.statusCode).toBe(400)
+
+    const errorMessages = JSON.parse(response.res.text).errors
+    expect(errorMessages).toContain('password must be longer than three characters')
   })
 
 })

@@ -1,6 +1,7 @@
 const userRouter = require('express').Router()
 const bcrypt = require('bcryptjs')
 const User = require('../models/user')
+const CustomValidationError = require('../utils/customError')
 
 userRouter.get('/', async (req, res, next) => {
   try {
@@ -12,23 +13,42 @@ userRouter.get('/', async (req, res, next) => {
 })
 
 userRouter.post('/', async (req, res, next) => {
-
+  let passwordError
   try {
+    const password = req.body.password
 
-    if (!req.body.password) {
-      return res.status(400).end()
+    if (!password) {
+      const err = new CustomValidationError('password required')
+      passwordError = err
+    } else if (password.length < 3) {
+      passwordError = new CustomValidationError('password must be longer than three characters')
     }
 
-    const passwordHash = await bcrypt.hash(req.body.password, 10)
+    const passwordHash = passwordError ? null : await bcrypt.hash(req.body.password, 10)
 
     const user = new User({
       ...req.body,
       passwordHash
     })
 
-    const newUser = await user.save()
-    res.status(201).json(newUser.toJSON())
-  } catch (err) {
+    if (!passwordError) {
+      const newUser = await user.save()
+      res.status(201).json(newUser.toJSON())
+    } else {
+      try {
+        await user.validate()
+      } catch (mongooseValidationError) {
+        const err = new CustomValidationError('Validation failed')
+        err.errors = { password: passwordError, ...mongooseValidationError.errors }
+        throw err
+      }
+      const err = new CustomValidationError('Validation failed')
+      err.errors = passwordError
+      throw err
+    }
+  } catch (thrownError) {
+    const err = new CustomValidationError('Validation failed')
+    err.errors = thrownError.errors
     next(err)
   }
 
