@@ -1,5 +1,5 @@
-const Blog = require('../models/blog');
-const User = require('../models/User');
+const Blog = require('../models/blog')
+const User = require('../models/User')
 
 const getAllDbBlogs = async () => {
   const rawBlogObjs = await Blog.find({})
@@ -13,74 +13,74 @@ const getAllDbUsers = async () => {
 
 const initialBlogs = [
   {
-    title: "React patterns",
-    author: "Michael Chan",
-    url: "https://reactpatterns.com/",
-    likes: 7,
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 7
   },
   {
-    title: "Go To Statement Considered Harmful",
-    author: "Edsger W. Dijkstra",
-    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-    likes: 5,
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5
   },
   {
-    title: "Canonical string reduction",
-    author: "Edsger W. Dijkstra",
-    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-    likes: 12,
+    title: 'Canonical string reduction',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    likes: 12
   },
   {
-    title: "First class tests",
-    author: "Robert C. Martin",
-    url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-    likes: 10,
+    title: 'First class tests',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    likes: 10
   },
   {
-    title: "TDD harms architecture",
-    author: "Robert C. Martin",
-    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-    likes: 0,
+    title: 'TDD harms architecture',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+    likes: 0
   },
   {
-    title: "Type wars",
-    author: "Robert C. Martin",
-    url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-    likes: 2,
+    title: 'Type wars',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    likes: 2
   }  
 ]
 
 const initialUsers = {
   unhashed: [
     {
-      username: "Root",
-      name: "Michael Chan",
-      password: "password"
+      username: 'Root',
+      name: 'Michael Chan',
+      password: 'password'
     },
     {
-      username: "TestUser1",
-      name: "Edsger W. Dijkstra",
-      password: "algorithmsRCool"
+      username: 'TestUser1',
+      name: 'Edsger W. Dijkstra',
+      password: 'algorithmsRCool'
     },
     {
-      username: "TestUser2",
-      name: "Bradley Baylis",
-      password: "Codeycodecode12"
+      username: 'TestUser2',
+      name: 'Bradley Baylis',
+      password: 'Codeycodecode12'
     },
     {
-      username: "TestUser3",
-      name: "Robert C. Martin",
-      password: "testingtesting"
+      username: 'TestUser3',
+      name: 'Robert C. Martin',
+      password: 'testingtesting'
     },
     {
-      username: "TestUser4",
-      name: "Jazz The Dog",
-      password: "tasty treats woof"
+      username: 'TestUser4',
+      name: 'Jazz The Dog',
+      password: 'tasty treats woof'
     },
     {
-      username: "TestUser5",
-      name: "Dave Davidson",
-      password: "imdave1"
+      username: 'TestUser5',
+      name: 'Dave Davidson',
+      password: 'imdave1'
     }  
   ],
   hashed: [
