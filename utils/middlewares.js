@@ -10,8 +10,7 @@ const errorHandler = (err, req, res, next) => {
     }
     const nestedErrs = propNames.map(propName => err.errors[propName])
     nestedErrs.forEach(nestedErr => {
-      
-      if (nestedErr.name === 'ValidatorError') {
+      if (nestedErr.name === 'ValidatorError' || nestedErr.name === 'ValidationError') {
         //mongoose validator error
         const message = errMessageMaker(nestedErr)
         validationErrors = [...validationErrors, message]
@@ -25,7 +24,7 @@ const errorHandler = (err, req, res, next) => {
     }
   }
   
-  logger.error(err.name)
+  logger.error(err)
     
   res.status(500).json({ error: err.message })
 }

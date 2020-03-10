@@ -5,7 +5,7 @@ const CustomValidationError = require('../utils/customError')
 
 userRouter.get('/', async (req, res, next) => {
   try {
-    const users = await User.find({})
+    const users = await User.find({}).populate('blogs')
     res.json(users.map(user => user.toJSON()))
   } catch (err) {
     next(err)
