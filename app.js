@@ -8,7 +8,8 @@ const logger = require('./utils/logger')
 const config = require('./utils/config')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
-const middlewares = require('./utils/middlewares')
+const loginRouter = require('./controllers/login')
+const middlewares = require('./middlewares')
 
 logger.info('connecting to MongoDB server')
 mongoose.connect(config.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
@@ -22,9 +23,11 @@ app.use(bodyParser.json())
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('common'))
 }
+app.use(middlewares.tokenExtractor)
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 app.use(middlewares.errorHandler)
 

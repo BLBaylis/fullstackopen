@@ -1,7 +1,9 @@
 const blogsRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const CustomValidationError = require('../utils/customError')
+const config = require('../utils/config')
 
 blogsRouter.get('/', async (req, res, next) => {
   try {
@@ -14,8 +16,11 @@ blogsRouter.get('/', async (req, res, next) => {
   
 blogsRouter.post('/', async (req, res, next) => {
   try {
-    const users = await User.find({})
-    const user = users[Math.floor(Math.random() * users.length)]
+    const decodedToken = req.token ? jwt.verify(req.token, config.JWT_SECRET) : null
+    if (!decodedToken.id) {
+      return res.status(401).json({ error: 'Login required' })
+    }
+    const user = await User.findOne({ username: decodedToken.username })
     const blog = new Blog({ ...req.body, likes: req.body.likes || 0, user: user._id })
     const newBlog = await blog.save()
     user.blogs = [...user.blogs, newBlog]

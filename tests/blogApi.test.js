@@ -36,6 +36,8 @@ describe('/get', () => {
 
 describe('/post', () => {
 
+  const authToken = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJvb3QiLCJpZCI6IjVlNjdjM2Q1YzY0ZTViMDQwYzlhNDdlOSIsImlhdCI6MTU4Mzg2MTQyOH0.OlVEV-GCa_FK7nls_Xve6swl1pG_B-1jW1II0Mo8uSE'
+
   test('can post valid blog', async () => {
     const newBlog = {
       title: 'New Blog Post',
@@ -46,6 +48,7 @@ describe('/post', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', authToken)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -64,7 +67,10 @@ describe('/post', () => {
       url: 'https://url.com'
     }
 
-    const response = await api.post('/api/blogs').send(newBlog)
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', authToken)
+      .send(newBlog)
     expect(response.body.likes).toBe(0)
   })
 
@@ -76,6 +82,7 @@ describe('/post', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', authToken)
       .send(blogWithNoTitle)
       .expect(400)
   })
@@ -88,6 +95,7 @@ describe('/post', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', authToken)
       .send(blogWithNoUrl)
       .expect(400)
   })

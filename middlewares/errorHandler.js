@@ -1,4 +1,4 @@
-const logger = require('./logger')
+const logger = require('../utils/logger')
 
 // eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, next) => {
@@ -22,7 +22,12 @@ const errorHandler = (err, req, res, next) => {
     if (validationErrors) {
       return res.status(400).json({ errors: validationErrors })
     }
+  } else if (err.name === 'JsonWebTokenError') {
+    return res.status(401).json({
+      error: 'invalid token'
+    })
   }
+
   
   logger.error(err)
     
@@ -53,4 +58,4 @@ const errMessageMaker = errObj => {
   return message
 }
 
-module.exports = { errorHandler }
+module.exports = errorHandler 
