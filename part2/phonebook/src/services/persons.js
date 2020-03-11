@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3001/api/persons"
+const baseUrl = "/api/persons"
 
 const getAllPersons = () => {
     return fetch(baseUrl)
@@ -14,6 +14,12 @@ const addNewPerson = personObj => {
         },
       })
       .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          throw new Error(data.error)
+        }
+        return data;
+      })
 }
 
 const updatePerson = updatedPerson => {

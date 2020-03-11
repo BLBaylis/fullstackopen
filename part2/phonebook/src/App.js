@@ -56,7 +56,7 @@ const App = () => {
           return newPerson
         })
         .then(newPerson => setNotificationMessage(`${newPerson.name}'s number has been added`))
-        .catch(err => setNotificationMessage("Unable to add new person"))
+        .catch(err => setNotificationMessage(err.message))
     }
   }
 
