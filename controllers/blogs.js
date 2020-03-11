@@ -38,9 +38,21 @@ blogsRouter.post('/', async (req, res, next) => {
 
 blogsRouter.delete('/:id', async (req, res, next) => {
   try {
-    const deletedBlog = await Blog.findByIdAndRemove(req.params.id)
-    if (deletedBlog) {
-      res.status(204).end()
+    const decodedToken = req.token ? jwt.verify(req.token, config.JWT_SECRET) : null
+    if (!decodedToken.id) {
+      return res.status(401).json({ error: 'Login required' })
+    }
+    const user = await User.findOne({ username: decodedToken.username })
+    const blogToDelete = await Blog.findById(req.params.id)
+    //console.log(user, blogToDelete)
+    if (blogToDelete) {
+      //console.log(`matching? ${user._id.toString() === blogToDelete.user._id.toString()}`)
+      //console.log(user._id.toString(), blogToDelete.user._id.toString())
+      if (user._id.toString() === blogToDelete.user._id.toString()) {
+        await blogToDelete.remove()
+        return res.status(204).end()
+      }
+      res.status(401).json({ error: 'You do not have appropriate permissions' })
     } else {
       res.status(404).end()
     }
