@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import Login from './components/Login'
+import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
-import Notification from './components/Notification'
 import blogService from './services/blogs'
+import loginService from './services/login'
 import createNotification from './util/createNotification'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const [displayLogin, setDisplayLogin] = useState(false)
   const [user, setUser] = useState(null)
-  const [blogMessages, setBlogMessages] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [loginMessage, setLoginMessage] = useState(null)
+  const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
     blogService
@@ -27,36 +30,53 @@ const App = () => {
     }
   }, [])
 
-  const createNewBlog = async blogObj => {
-    const createBlogNotification = createNotification(setBlogMessages)
+  const handleLogin = async event => {
+    event.preventDefault()
     try {
-      const newBlog = await blogService.newBlog(blogObj)
-      const { title, author } = newBlog
-      setBlogs(blogs.concat(newBlog))
-      createBlogNotification([`${title} by ${author} successfully added`])
+      const user = await loginService.login({ username, password })
+      window.localStorage.setItem('user', JSON.stringify(user))
+      blogService.setToken(user.token)
+      setUser(user)
     } catch (err) {
-      createBlogNotification(err.errors)
+      createNotification(setLoginMessage)(err.message)
     }
-  }
+}
 
   const logout = () => {
     localStorage.removeItem('user')
     setUser(null)
+    setUsername('')
+    setPassword('')
+    setDisplayLogin(false)
   }
 
   if (!user) {
-    return <Login setUser = {setUser} />
+    return (
+      <LoginForm
+        username = {username}
+        setUsername = {setUsername} 
+        password = {password}
+        setPassword = {setPassword} 
+        loginMessage = {loginMessage}
+        displayLogin = {displayLogin}
+        setDisplayLogin = {setDisplayLogin}
+        handleLogin = {handleLogin}
+      />
+    )
   }
 
   return (
     <div>
-      <h1>Blogs</h1>
-      <p>Logged in as {user.username}</p>
-      <button onClick = {logout}>Log out</button>
-      <Notification messages = {blogMessages}/>
-      <BlogForm createNewBlog = {createNewBlog} />
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      {user && (
+        <>
+          <p>Logged in as {user.username}</p>
+          <button onClick = {logout}>Log out</button>
+          <h1>Blogs</h1>
+          <BlogForm blogs = {blogs} setBlogs = {setBlogs}/>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+        </>
       )}
     </div>
   )
