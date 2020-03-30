@@ -1,22 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-const Notification = ({ message, messages }) => {
-    if (!message && !messages) {
-        return null;
-    }
+const Notification = ({ resetNotification, messages }) => {
+  useEffect(() => resetNotification(messages))
 
-    if (messages) {
-        if (message) {
-            messages = [message, ...messages]
-        }
-        return (
-            <ul>
-                {messages.map(message => <li key = {message}>{message}</li>)}
-            </ul>
-        )
-    }
-
-    return <p>{message}</p>
+  if (!messages) {
+    return null
+  }
+  return messages.length === 1 ? <p>{messages[0]}</p> : <ul>{messages.map(message => <li key = {message}>{message}</li>)}</ul>
 }
 
 export default Notification

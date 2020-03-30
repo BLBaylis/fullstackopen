@@ -1,41 +1,51 @@
-import React from 'react'
-import Notification from './Notification'
+import React, { useState } from 'react'
 
-const LoginForm = ({ username, setUsername, password, setPassword, loginMessage, handleLogin, displayLogin, setDisplayLogin }) => {
+const LoginForm = ({ setLoginMessages, login }) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-    if (!displayLogin) {
-        return <button onClick = {() => setDisplayLogin(true)}>Log in</button>
+  const handleChange = ({ target }) => {
+    const setters = {
+      username: setUsername,
+      password: setPassword
     }
+    setters[target.name](target.value)
+  }
 
-    return (
-        <div>
-            <h1>Login</h1>
-            <Notification message = {loginMessage}/>
-            <form onSubmit={handleLogin}>
-                <div>
-                    username
-                    <input
-                        type="text"
-                        value={username}
-                        name="Username"
-                        onChange={({ target }) => setUsername(target.value)}
-                    />
-                </div>
-                <div>
-                    password
-                    <input
-                        type="password"
-                        value={password}
-                        name="Password"
-                        onChange={({ target }) => setPassword(target.value)}
-                    />
-                </div>
-                <button type="submit">Submit</button>
-                <button onClick = {() => setDisplayLogin(false)}>Cancel</button>
-            </form>
-        </div>
-    )
+  const handleLogin = async event => {
+    event.preventDefault()
+    try {
+      setUsername('')
+      setPassword('')
+      await login({ username, password })
+    } catch (err) {
+      setLoginMessages([err.message])
+    }
+  }
 
+  return (
+    <form onSubmit={handleLogin}>
+      <div>
+                username
+        <input
+          type="text"
+          value={username}
+          name="username"
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+                password
+        <input
+          type="password"
+          value={password}
+          name="password"
+          onChange={handleChange}
+        />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  )
 }
 
 export default LoginForm
