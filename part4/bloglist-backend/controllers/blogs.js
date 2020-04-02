@@ -39,7 +39,7 @@ blogsRouter.post('/', async (req, res, next) => {
 blogsRouter.delete('/:id', async (req, res, next) => {
   try {
     const decodedToken = req.token ? jwt.verify(req.token, config.JWT_SECRET) : null
-    if (!decodedToken.id) {
+    if (!decodedToken || !decodedToken.id) {
       return res.status(401).json({ error: 'Login required' })
     }
     const user = await User.findOne({ username: decodedToken.username })
@@ -60,17 +60,22 @@ blogsRouter.delete('/:id', async (req, res, next) => {
 
 blogsRouter.put('/:id', async (req, res, next) => {
   try {
-    const id = req.params.id
-    let blogToUpdate = await Blog.findById(id)
+    const decodedToken = req.token ? jwt.verify(req.token, config.JWT_SECRET) : null
+    if (!decodedToken || !decodedToken.id) {
+      return res.status(401).json({ error: 'Login required' })
+    }
+    const user = await User.findOne({ username: decodedToken.username })
+    let blogToUpdate = await Blog.findById(req.params.id)
     if (blogToUpdate) {
       for (const prop in req.body) {
         blogToUpdate[prop] = req.body[prop]
       }
-      await blogToUpdate.save()
-      res.status(204).end()
+      blogToUpdate.user = user
+      const updatedBlog = await blogToUpdate.save()
+      res.status(200).json(updatedBlog.toJSON())
     } else {
       const newBlog = await new Blog(req.body).save()
-      res.status(201).json(newBlog.toJSON())
+      res.status(200).json(newBlog.toJSON())
     }
   } catch (err) {
     next(err)

@@ -19,7 +19,7 @@ beforeEach(async () => {
 
   //associate user Root with first blog
   const allUsers = await getAllDbUsers()
-  const userForBlog = allUsers.filter(user => user.username == "Root")[0]
+  const userForBlog = allUsers.filter(user => user.username == 'Root')[0]
   const initBlogsClone = initialBlogs.map(blog => ({...blog}))
   initBlogsClone[0].user = userForBlog.id
 
@@ -125,9 +125,9 @@ describe('/delete/:id', () => {
 
   test('deletes a blog by id successfully', async () => {
     const allUsers = await getAllDbUsers()
-    const userForBlog = allUsers.filter(user => user.username == "Root")[0]
+    const userForBlog = allUsers.filter(user => user.username == 'Root')[0]
     const tokenObj = {
-      username: "Root",
+      username: 'Root',
       id: userForBlog.id
     }
     const authToken = `bearer ${jwt.sign(tokenObj, config.JWT_SECRET)}`
@@ -151,9 +151,9 @@ describe('/delete/:id', () => {
   test('rejects deletion request if requesting user isn\'t user who posted blog', async () => {
     //token for TestUser1, but deletedBlogId belongs to Root
     const allUsers = await getAllDbUsers()
-    const userForBlog = allUsers.filter(user => user.username == "TestUser1")[0]
+    const userForBlog = allUsers.filter(user => user.username == 'TestUser1')[0]
     const tokenObj = {
-      username: "TestUser1",
+      username: 'TestUser1',
       id: userForBlog.id
     }
     const wrongUserToken = `bearer ${jwt.sign(tokenObj, config.JWT_SECRET)}`
@@ -177,13 +177,21 @@ describe('/delete/:id', () => {
 describe('/put/:id', () => {
 
   test('updates a existing blog by id successfully', async () => {
+    const allUsers = await getAllDbUsers()
+    const userForBlog = allUsers.filter(user => user.username == 'Root')[0]
+    const tokenObj = {
+      username: 'Root',
+      id: userForBlog.id
+    }
+    const authToken = `bearer ${jwt.sign(tokenObj, config.JWT_SECRET)}`
     const allBlogsBefore = await getAllDbBlogs()
     const updatedBlogBefore = allBlogsBefore[0]
     const { likes: likesBefore, id } = updatedBlogBefore
     await api
       .put(`/api/blogs/${id}`)
+      .set('Authorization', authToken)
       .send({ ...updatedBlogBefore, likes: likesBefore + 1 })
-      .expect(204)
+      .expect(200)
 
     const allBlogsAfter = await getAllDbBlogs()
     const updatedBlogAfter = allBlogsAfter.filter(blog => blog.id === id)[0]
@@ -191,6 +199,13 @@ describe('/put/:id', () => {
   })
 
   test('adds a blog if existing blog not found', async () => {
+    const allUsers = await getAllDbUsers()
+    const userForBlog = allUsers.filter(user => user.username == 'Root')[0]
+    const tokenObj = {
+      username: 'Root',
+      id: userForBlog.id
+    }
+    const authToken = `bearer ${jwt.sign(tokenObj, config.JWT_SECRET)}`
     const newBlog = {
       title: 'New Blog Post',
       author: 'Test Author',
@@ -199,8 +214,9 @@ describe('/put/:id', () => {
     }
     await api
       .put('/api/blogs/5e6151482320eb12b8b36e41')
+      .set('Authorization', authToken)
       .send(newBlog)
-      .expect(201)
+      .expect(200)
 
     const allBlogs = await getAllDbBlogs()
     expect(allBlogs.length).toBe(initialBlogs.length + 1)
