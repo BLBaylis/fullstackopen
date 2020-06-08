@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import Blog from './components/Blog/Blog'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
+import BlogForm from './components/BlogForm/BlogForm'
 import Toggleable from './components/Toggleable'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -18,12 +18,15 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll()
-      .then(blogs => setBlogs(blogs.sort((a, b) => {
-        if (a.likes === b.likes) {
-          return 0
-        }
-        return a.likes <= b.likes ? 1 : -1
-      })))
+      .then(function sortBlogsByLikes(blogs) {
+        return blogs.sort((a, b) => {
+          if (a.likes === b.likes) {
+            return 0
+          }
+          return a.likes <= b.likes ? 1 : -1
+        })
+      })
+      .then(setBlogs)
       .catch(err => console.error(err))
   }, [])
 

@@ -31,31 +31,37 @@ const BlogForm = ({ addBlog, setBlogMessages }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-                Title:
-        <input
-          type="text"
-          value={title}
-          name="title"
-          onChange={handleChange}
-        />
+        <label>Title:     
+          <input
+            type="text"
+            value={title}
+            name="title"
+            id="title"
+            onChange={handleChange}
+          />
+        </label>   
       </div>
       <div>
-                Author:
-        <input
-          type="text"
-          value={author}
-          name="author"
-          onChange={handleChange}
-        />
+        <label>Author:
+          <input
+            type="text"
+            value={author}
+            name="author"
+            id="author"
+            onChange={handleChange}
+          />
+        </label>   
       </div>
       <div>
-                Url:
-        <input
-          type="text"
-          value={url}
-          name="url"
-          onChange={handleChange}
-        />
+        <label>Url:
+          <input
+            type="text"
+            value={url}
+            name="url"
+            id="url"
+            onChange={handleChange}
+          />
+        </label>   
       </div>
       <button type="submit">Submit</button>
     </form>

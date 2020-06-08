@@ -1,5 +1,5 @@
 import React from 'react'
-import Toggleable from './Toggleable'
+import Toggleable from '../Toggleable'
 
 const noMargin = {
   margin : 0
@@ -22,7 +22,7 @@ const Blog = ({ blog, deleteBlog, incrementBlogLikes }) => {
     <div style = {{ border : 'solid 1px #000', padding: '1rem', margin: '1rem' }}>
       <h3>{title} by {author}</h3>
       <Toggleable labelWhenOpened = "Close" labelWhenClosed = "Show details">
-        <div style = {{ paddingBottom: '1rem' }}>
+        <div className = "toggleable-content" style = {{ paddingBottom: '1rem' }}>
           <p style = {noMargin}>{url}</p>
           <div style = {noMargin}>
             <p style = {{ display: 'inline-block', ...noMargin, marginRight: '10px' }}>Likes: {likes}</p>
