@@ -19,12 +19,7 @@ const App = () => {
     blogService
       .getAll()
       .then(function sortBlogsByLikes(blogs) {
-        return blogs.sort((a, b) => {
-          if (a.likes === b.likes) {
-            return 0
-          }
-          return a.likes <= b.likes ? 1 : -1
-        })
+        return blogs.sort((a, b) => a.likes <= b.likes ? 1 : -1)
       })
       .then(setBlogs)
       .catch(err => console.error(err))
@@ -90,17 +85,14 @@ const App = () => {
 
   if (!user) {
     return (
-      <Toggleable
-        labelWhenClosed = "Log In"
-        labelWhenOpened = "Cancel"
-      >
+      <div className = "login-form">
         <h1>Login</h1>
         <Notification resetNotification = {resetNotification(setLoginMessages)} messages = {loginMessages}/>
         <LoginForm
           login = {login}
           setLoginMessages = {setLoginMessages}
         />
-      </Toggleable>
+      </div>
     )
   }
 

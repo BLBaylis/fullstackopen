@@ -19,14 +19,14 @@ const Blog = ({ blog, deleteBlog, incrementBlogLikes }) => {
   }
 
   return (
-    <div style = {{ border : 'solid 1px #000', padding: '1rem', margin: '1rem' }}>
+    <div data-cy = "blog" style = {{ border : 'solid 1px #000', padding: '1rem', margin: '1rem' }}>
       <h3>{title} by {author}</h3>
       <Toggleable labelWhenOpened = "Close" labelWhenClosed = "Show details">
         <div className = "toggleable-content" style = {{ paddingBottom: '1rem' }}>
           <p style = {noMargin}>{url}</p>
           <div style = {noMargin}>
-            <p style = {{ display: 'inline-block', ...noMargin, marginRight: '10px' }}>Likes: {likes}</p>
-            <button onClick = {addLike}>Like</button>
+            <p style = {{ display: 'inline-block', ...noMargin, marginRight: '10px' }} data-cy = "likes-counter">Likes: {likes}</p>
+            <button onClick = {addLike} data-cy = "like-button">Like</button>
           </div>
           <p style = {noMargin}>Posted by: {user.username}</p>
           <button onClick = {removeBlog}>Remove</button>

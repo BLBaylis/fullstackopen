@@ -1,8 +1,8 @@
 import React, { useState, useImperativeHandle } from 'react'
 import PropTypes from 'prop-types'
 
-const Toggleable = React.forwardRef(({ labelWhenOpened, labelWhenClosed, children }, ref) => {
-  const [visible, setVisibile] = useState(false)
+const Toggleable = React.forwardRef(({ labelWhenOpened, labelWhenClosed, children, initialVisibility = false }, ref) => {
+  const [visible, setVisibile] = useState(initialVisibility)
 
   const toggleVisibility = () => setVisibile(!visible)
 

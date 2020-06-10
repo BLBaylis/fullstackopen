@@ -26,22 +26,26 @@ const LoginForm = ({ setLoginMessages, login }) => {
   return (
     <form onSubmit={handleLogin}>
       <div>
-                username
-        <input
-          type="text"
-          value={username}
-          name="username"
-          onChange={handleChange}
-        />
+        <label>Username:
+          <input
+            id = "username"
+            type="text"
+            value={username}
+            name="username"
+            onChange={handleChange}
+          />
+        </label>
       </div>
       <div>
-                password
-        <input
-          type="password"
-          value={password}
-          name="password"
-          onChange={handleChange}
-        />
+        <label>Password:
+          <input
+            id = "password"
+            type="password"
+            value={password}
+            name="password"
+            onChange={handleChange}
+          />
+        </label>
       </div>
       <button type="submit">Submit</button>
     </form>
